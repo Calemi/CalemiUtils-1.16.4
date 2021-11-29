@@ -47,11 +47,12 @@ public class BlockLinkPortal extends BlockBase implements ITileEntityProvider {
         if (entity instanceof PlayerEntity && location.getTileEntity() instanceof TileEntityLinkPortal) {
 
             PlayerEntity player = (PlayerEntity) entity;
-
             TileEntityLinkPortal portal = (TileEntityLinkPortal) location.getTileEntity();
 
-            if (!player.isPotionActive(Effects.NAUSEA)) portal.teleport((PlayerEntity) entity);
-            player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20, 0));
+            if (!player.isPotionActive(Effects.NAUSEA)) {
+                player.addPotionEffect(new EffectInstance(Effects.NAUSEA, 20, 0));
+                if (world.isRemote()) portal.teleport((PlayerEntity) entity);
+            }
         }
     }
 
@@ -84,7 +85,7 @@ public class BlockLinkPortal extends BlockBase implements ITileEntityProvider {
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
 
         if (rand.nextInt(100) == 0) {
-            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
+            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.1F, rand.nextFloat() * 0.4F + 0.8F, false);
         }
     }
 

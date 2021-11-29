@@ -9,6 +9,8 @@ import com.tm.calemiutils.init.InitItems;
 import com.tm.calemiutils.init.InitTileEntityTypes;
 import com.tm.calemiutils.inventory.ContainerPortalProjector;
 import com.tm.calemiutils.item.ItemLinkBookLocation;
+import com.tm.calemiutils.main.CalemiUtils;
+import com.tm.calemiutils.packet.PacketLinkBook;
 import com.tm.calemiutils.tileentity.base.TileEntityInventoryBase;
 import com.tm.calemiutils.util.PortalVeinScan;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -17,6 +19,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,7 +47,13 @@ public class TileEntityPortalProjector extends TileEntityInventoryBase implement
     public void teleport(PlayerEntity player) {
 
         if (isProjecting()) {
-            ItemLinkBookLocation.teleport(world, player, ItemLinkBookLocation.getLinkedLocation(world, getLinkBook()), ItemLinkBookLocation.getLinkedRotation(getLinkBook()), ItemLinkBookLocation.getLinkedDimensionName(getLinkBook()), ItemLinkBookLocation.TravelMethod.PORTAL);
+
+            Location location = ItemLinkBookLocation.getLinkedLocation(player.world, getLinkBook());
+            BlockPos pos = location.getBlockPos();
+            float yaw = ItemLinkBookLocation.getLinkedRotation(getLinkBook());
+            String dimName = ItemLinkBookLocation.getLinkedDimensionName(getLinkBook());
+
+            CalemiUtils.network.sendToServer(new PacketLinkBook("teleport", Hand.MAIN_HAND, pos, yaw, dimName, ItemLinkBookLocation.TravelMethod.PORTAL));
         }
     }
 

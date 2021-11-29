@@ -78,7 +78,7 @@ public class BlockIronScaffold extends BlockBase {
                         if (!world.isRemote) {
 
                             if (EntityHelper.canTeleportAt(nextLocation)) {
-                                EntityHelper.teleportPlayer((ServerPlayerEntity) player, nextLocation, player.rotationYaw, player.rotationPitch);
+                                EntityHelper.teleportPlayer(player, nextLocation, player.rotationYaw, player.rotationPitch);
                                 return ActionResultType.SUCCESS;
                             }
 
